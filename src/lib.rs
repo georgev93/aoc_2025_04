@@ -3,17 +3,23 @@ use std::sync::{
     atomic::{AtomicU64, Ordering},
 };
 
+mod paper;
+use crate::paper::PaperHouse;
+
 use std::thread;
 
 mod file_parser;
 use crate::file_parser::{FileParser, FileParserTrait};
 
 pub fn solve(input_file: &str) -> (u64, u64) {
-    // let input_lines = FileParser::new(input_file).parse_lines();
+    let input_grid = FileParser::new(input_file).parse_grid();
+    let warehouse = PaperHouse::new(input_grid);
+
+    let part_1 = warehouse.num_of_crowded_paper_rolls();
     // let battery_banks = input_lines.iter().map(|s| BatteryBank::new(s));
 
-    let result1 = Arc::new(AtomicU64::new(0));
-    let result2 = Arc::new(AtomicU64::new(0));
+    // let result1 = Arc::new(AtomicU64::new(0));
+    // let result2 = Arc::new(AtomicU64::new(0));
 
     // let mut handles: Vec<std::thread::JoinHandle<()>> = Vec::with_capacity(battery_banks.len());
     // for battery_bank in battery_banks {
@@ -34,7 +40,7 @@ pub fn solve(input_file: &str) -> (u64, u64) {
     //     result1.load(Ordering::Relaxed),
     //     result2.load(Ordering::Relaxed),
     // )
-    (0, 0)
+    (part_1, 0)
 }
 
 #[cfg(test)]
@@ -44,14 +50,14 @@ mod tests {
     #[test]
     fn example() {
         let (part_1, part_2) = solve("data/example.txt");
-        assert_eq!(part_1, 0);
-        assert_eq!(part_2, 0);
+        assert_eq!(part_1, 13);
+        // assert_eq!(part_2, 0);
     }
 
-    // #[test]
-    // fn actual() {
-    //     let (part_1, part_2) = solve("data/input.txt");
-    //     assert_eq!(part_1, 0);
-    //     assert_eq!(part_2, 0);
-    // }
+    #[test]
+    fn actual() {
+        let (part_1, part_2) = solve("data/input.txt");
+        assert_eq!(part_1, 1384);
+        // assert_eq!(part_2, 0);
+    }
 }
