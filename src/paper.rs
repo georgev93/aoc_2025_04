@@ -4,6 +4,11 @@ pub struct PaperHouse {
     height: usize,
 }
 
+struct Coord {
+    x: usize,
+    y: usize,
+}
+
 impl PaperHouse {
     pub fn new(input_grid: Vec<Vec<char>>) -> Self {
         Self {
@@ -13,8 +18,10 @@ impl PaperHouse {
         }
     }
 
-    pub fn num_of_crowded_paper_rolls(&self) -> u64 {
+    pub fn remove_available_paper_rolls(&mut self) -> u64 {
         let mut ret_val = 0u64;
+        let mut coords_to_be_removed: Vec<Coord> = Vec::new();
+
         for row in 0..self.height {
             let mut row_string = String::new();
             for col in 0..self.width {
@@ -22,15 +29,19 @@ impl PaperHouse {
                     && (self.layout[row][col] == '@')
                 {
                     ret_val += 1;
+                    coords_to_be_removed.push(Coord { x: col, y: row });
+                    row_string.push('x');
+                } else {
+                    row_string.push(self.layout[row][col]);
                 }
-                row_string.push((self.get_number_of_paper_neighbors(col, row) + 48) as char);
-                //     row_string.push('x');
-                // } else {
-                //     row_string.push(self.layout[row][col]);
-                // }
+                // row_string.push((self.get_number_of_paper_neighbors(col, row) + 48) as char);
             }
             println!("{} {ret_val}", row_string);
         }
+        for coord in coords_to_be_removed {
+            self.layout[coord.y][coord.x] = '.';
+        }
+        println!("");
         ret_val
     }
 
