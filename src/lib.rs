@@ -12,8 +12,8 @@ mod file_parser;
 use crate::file_parser::{FileParser, FileParserTrait};
 
 pub fn solve(input_file: &str) -> (u64, u64) {
-    let input_grid = FileParser::new(input_file).parse_grid();
-    let mut warehouse = PaperHouse::new(input_grid);
+    let mut input_grid = FileParser::new(input_file).parse_grid();
+    let mut warehouse = PaperHouse::new(&mut input_grid);
 
     let part_1 = warehouse.remove_available_paper_rolls();
     let mut paper_rolls_removed_this_go = part_1;
@@ -31,13 +31,13 @@ pub fn load_file(input_file: &str) -> Vec<Vec<char>> {
     FileParser::new(input_file).parse_grid()
 }
 
-pub fn solve_part1(input_grid: Vec<Vec<char>>) -> u64 {
+pub fn solve_part1(input_grid: &mut Vec<Vec<char>>) -> u64 {
     let mut warehouse = PaperHouse::new(input_grid);
 
     warehouse.remove_available_paper_rolls()
 }
 
-pub fn solve_part2(input_grid: Vec<Vec<char>>) -> u64 {
+pub fn solve_part2(input_grid: &mut Vec<Vec<char>>) -> u64 {
     let mut warehouse = PaperHouse::new(input_grid);
 
     let part_1 = warehouse.remove_available_paper_rolls();
@@ -71,9 +71,10 @@ mod tests {
 
     #[test]
     fn actual_parts() {
-        let input_file = load_file("data/input.txt");
-        assert_eq!(solve_part1(input_file), 1384);
-        let input_file = load_file("data/input.txt");
-        assert_eq!(solve_part2(input_file), 8013);
+        let mut input_file = load_file("data/input.txt");
+        assert_eq!(solve_part1(&mut input_file), 1384);
+
+        let mut input_file = load_file("data/input.txt");
+        assert_eq!(solve_part2(&mut input_file), 8013);
     }
 }

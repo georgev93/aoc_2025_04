@@ -10,14 +10,22 @@ fn bench_load(c: &mut Criterion) {
 }
 
 fn bench_solve_part1(c: &mut Criterion) {
-    let input_file = load_file("data/input.txt");
-    c.bench_function("input", move |b| b.iter(|| solve_part1(input_file.clone())));
+    c.bench_function("Part 1 only", |b| {
+        b.iter(|| {
+            assert_eq!(solve_part1(&mut load_file("data/input.txt")), 1384);
+        })
+    });
 }
 
 fn bench_solve_part2(c: &mut Criterion) {
-    let input_file = load_file("data/input.txt");
-    c.bench_function("input", move |b| b.iter(|| solve_part2(input_file.clone())));
+    c.bench_function("Part 2 only", |b| {
+        b.iter(|| assert_eq!(solve_part2(&mut load_file("data/input.txt")), 8013))
+    });
 }
 
-criterion_group! {name = benches; config= Criterion::default(); targets= bench_solve, bench_load, bench_solve_part1, bench_solve_part2}
+criterion_group! {
+name = benches;
+config= Criterion::default();
+targets= bench_solve, bench_load, bench_solve_part1, bench_solve_part2}
+
 criterion_main!(benches);

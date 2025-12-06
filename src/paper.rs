@@ -1,5 +1,5 @@
-pub struct PaperHouse {
-    layout: Vec<Vec<char>>,
+pub struct PaperHouse<'a> {
+    layout: &'a mut Vec<Vec<char>>,
     width: usize,
     height: usize,
 }
@@ -9,8 +9,8 @@ struct Coord {
     y: usize,
 }
 
-impl PaperHouse {
-    pub fn new(input_grid: Vec<Vec<char>>) -> Self {
+impl<'a> PaperHouse<'a> {
+    pub fn new(input_grid: &'a mut Vec<Vec<char>>) -> Self {
         Self {
             width: input_grid[0].len(),
             height: input_grid.len(),
@@ -106,14 +106,14 @@ mod tests {
 
     #[test]
     fn instantiation() {
-        let warehouse_grid = mock_grid::str_into_grid(
+        let mut warehouse_grid = mock_grid::str_into_grid(
             "
             @@
             ..
             @.
             ",
         );
-        let my_warehouse = PaperHouse::new(warehouse_grid);
+        let my_warehouse = PaperHouse::new(&mut warehouse_grid);
         assert_eq!(my_warehouse.layout[0], vec!['@', '@']);
         assert_eq!(my_warehouse.layout[1], vec!['.', '.']);
         assert_eq!(my_warehouse.layout[2], vec!['@', '.']);
@@ -124,7 +124,7 @@ mod tests {
 
     #[test]
     fn paper_count() {
-        let warehouse_grid = mock_grid::str_into_grid(
+        let mut warehouse_grid = mock_grid::str_into_grid(
             " ..@@.@@@@.
               @@@.@.@.@@
               @@@@@.@.@@
@@ -136,7 +136,7 @@ mod tests {
               .@@@@@@@@.
               @.@.@@@.@.",
         );
-        let my_warehouse = PaperHouse::new(warehouse_grid);
+        let my_warehouse = PaperHouse::new(&mut warehouse_grid);
         assert_eq!(my_warehouse.get_number_of_paper_neighbors(0, 0), 2);
         assert_eq!(my_warehouse.get_number_of_paper_neighbors(9, 0), 3);
         assert_eq!(my_warehouse.get_number_of_paper_neighbors(9, 9), 2);

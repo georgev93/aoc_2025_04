@@ -1,4 +1,8 @@
 - Time to complete: ~2.5 hours
-- Speed-optimized runtime: 53ms (criterion benchmark)
+- Speed-optimized runtime: (criterion benchmark)
+  - Combined: 35ms
+  - Parse input into 2D array: 13us
+  - Part 1 (including parse): 513us
+  - Part 2 (including parse): 35ms
 - Speed-optimized max heap: 111kB (`valgrind --trace-children=yes --tool=massif [PROG] && ms_print massif.out.* | head -40`)
 - Size-optimized executable size: 313kB
