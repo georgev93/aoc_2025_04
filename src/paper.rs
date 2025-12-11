@@ -1,3 +1,5 @@
+use rayon::iter::{IntoParallelIterator, ParallelIterator};
+
 pub struct PaperHouse<'a> {
     layout: &'a mut Vec<Vec<char>>,
     width: usize,
@@ -19,19 +21,29 @@ impl<'a> PaperHouse<'a> {
     }
 
     pub fn remove_available_paper_rolls(&mut self) -> u64 {
-        let mut ret_val = 0u64;
-        let mut coords_to_be_removed: Vec<Coord> = Vec::new();
-
-        for row in 0..self.height {
-            for col in 0..self.width {
-                if (self.get_number_of_paper_neighbors(col, row) < 4)
-                    && (self.layout[row][col] == '@')
-                {
-                    ret_val += 1;
-                    coords_to_be_removed.push(Coord { x: col, y: row });
+        let (ret_val, coords_to_be_removed): (u64, Vec<Coord>) = (0..self.height)
+            .into_par_iter()
+            .map(|row| {
+                let mut ret_val = 0u64;
+                let mut coords_to_be_removed: Vec<Coord> = Vec::new();
+                for col in 0..self.width {
+                    if (self.get_number_of_paper_neighbors(col, row) < 4)
+                        && (self.layout[row][col] == '@')
+                    {
+                        ret_val += 1;
+                        coords_to_be_removed.push(Coord { x: col, y: row });
+                    }
                 }
-            }
-        }
+                (ret_val, coords_to_be_removed)
+            })
+            .reduce(
+                || (0, vec![]),
+                |(ar, mut av), (br, bv)| {
+                    av.extend(bv);
+                    (ar + br, av)
+                },
+            );
+
         for coord in coords_to_be_removed {
             self.layout[coord.y][coord.x] = '.';
         }
